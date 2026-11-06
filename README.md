@@ -4,7 +4,7 @@ Entrega del **Tercer Parcial** de Organización de Computadores.
 
 **Autor:** Jaisson Steven Merchán Ardila
 
-**Repositorio:** 
+**Repositorio:** https://github.com/JSteven-mA/Ping-pong.git
 
 ## Alcance de este hito
 Esta entrega construye la base visual y estructural del juego. Dibuja la escena
