@@ -1,0 +1,86 @@
+/**
+ * Board: escenario del juego Ping Pong (Hito 1).
+ *
+ * Distribucion de la pantalla (512 x 256 pixeles):
+ *   - y = 0..21    : zona del HUD (texto con Output, filas 0 y 1).
+ *   - y = 22..24   : muro superior.
+ *   - y = 25..252  : zona de juego.
+ *   - y = 253..255 : muro inferior.
+ *   - Los lados izquierdo y derecho quedan abiertos (zonas de gol).
+ *
+ * Elementos decorativos: linea central punteada y un anillo en el centro.
+ */
+class Board {
+
+    // Coordenada Y donde comienza cada muro (cada muro mide 3 pixeles de alto).
+    field int wallTop, wallBottom;
+
+    // Centro del tablero, usado para el anillo central.
+    field int centerX, centerY;
+
+    /** Crea el tablero con las medidas estandar de la pantalla Hack. */
+    constructor Board new() {
+        let wallTop = 22;
+        let wallBottom = 253;
+        let centerX = 256;
+        let centerY = 138;      // punto medio de la zona de juego (25..252)
+        return this;
+    }
+
+    /** Libera la memoria del objeto. Debe llamarse al terminar de usarlo. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Dibuja el tablero completo: muros, linea central y anillo. */
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(0, wallTop, 511, wallTop + 2);          // muro superior
+        do Screen.drawRectangle(0, wallBottom, 511, wallBottom + 2);    // muro inferior
+        do drawCenterLine();
+        do drawCenterRing();
+        return;
+    }
+
+    /**
+     * Borra todo el escenario (desde el muro superior hasta el borde inferior).
+     * No toca la zona del HUD, que esta por encima del muro.
+     */
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(0, wallTop, 511, 255);
+        do Screen.setColor(true);   // se restaura el color por defecto
+        return;
+    }
+
+    /**
+     * Linea central punteada: segmentos de 7 pixeles de alto cada 14 pixeles,
+     * de 2 pixeles de ancho (x = 255..256, justo en el centro de 512).
+     */
+    method void drawCenterLine() {
+        var int y;
+        do Screen.setColor(true);
+        let y = 28;
+        while (y < 250) {
+            do Screen.drawRectangle(255, y, 256, y + 6);
+            let y = y + 14;
+        }
+        return;
+    }
+
+    /**
+     * Anillo central: se dibuja un circulo lleno de radio 22 y luego uno
+     * blanco de radio 19 encima, lo que deja un borde de 3 pixeles de grosor
+     * (Screen solo ofrece circulos llenos). Tambien oculta los segmentos de la
+     * linea central que caen dentro del anillo.
+     */
+    method void drawCenterRing() {
+        do Screen.setColor(true);
+        do Screen.drawCircle(centerX, centerY, 22);
+        do Screen.setColor(false);
+        do Screen.drawCircle(centerX, centerY, 19);
+        do Screen.setColor(true);   // se restaura el color por defecto
+        return;
+    }
+}

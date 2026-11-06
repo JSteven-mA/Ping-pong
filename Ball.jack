@@ -1,0 +1,57 @@
+/**
+ * Ball: pelota del juego (sprite circular).
+ *
+ * (cx, cy) es el CENTRO de la pelota. Con radio 3 ocupa un cuadrado de
+ * 7 x 7 pixeles: x = cx-3..cx+3, y = cy-3..cy+3.
+ */
+class Ball {
+
+    field int cx, cy;   // centro de la pelota
+    field int radius;   // radio en pixeles
+
+    /**
+     * Crea una pelota.
+     * @param acx coordenada X del centro (3..508)
+     * @param acy coordenada Y del centro (28..249 para quedar dentro de la zona de juego)
+     */
+    constructor Ball new(int acx, int acy) {
+        let cx = acx;
+        let cy = acy;
+        let radius = 3;
+        return this;
+    }
+
+    /** Libera la memoria del objeto. Debe llamarse al terminar de usarlo. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    // ---- Consultas (getters) ----
+    method int getX() { return cx; }
+    method int getY() { return cy; }
+    method int getRadius() { return radius; }
+
+    /** Dibuja la pelota en pantalla. */
+    method void draw() {
+        do paint(true);
+        return;
+    }
+
+    /** Borra la pelota (la pinta de blanco, sin dejar artefactos). */
+    method void erase() {
+        do paint(false);
+        return;
+    }
+
+    /**
+     * Rutina unica de pintado, compartida por draw() y erase().
+     * @param color true = negro (dibujar), false = blanco (borrar)
+     */
+    method void paint(boolean color) {
+        do Screen.setColor(color);
+        do Screen.drawCircle(cx, cy, radius);
+        do Screen.setColor(true);   // se restaura el color por defecto
+        return;
+    }
+}

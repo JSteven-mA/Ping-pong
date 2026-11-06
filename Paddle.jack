@@ -1,0 +1,70 @@
+/**
+ * Paddle: paleta vertical (sprite rectangular con ranura central).
+ *
+ * Diseno del sprite (6 x 40 pixeles):
+ *   - Rectangulo negro relleno.
+ *   - Ranura blanca de 2 pixeles de ancho en el centro, que le da aspecto
+ *     de paleta y no de simple bloque.
+ *
+ * (x, y) es la esquina superior izquierda del sprite.
+ */
+class Paddle {
+
+    field int x, y;     // posicion (esquina superior izquierda)
+    field int w, h;     // ancho y alto en pixeles
+
+    /**
+     * Crea una paleta.
+     * @param ax coordenada X inicial (0..505)
+     * @param ay coordenada Y inicial (25..213 para quedar dentro de la zona de juego)
+     */
+    constructor Paddle new(int ax, int ay) {
+        let x = ax;
+        let y = ay;
+        let w = 6;
+        let h = 40;
+        return this;
+    }
+
+    /** Libera la memoria del objeto. Debe llamarse al terminar de usarlo. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    // ---- Consultas (getters) ----
+    method int getX() { return x; }
+    method int getY() { return y; }
+    method int getW() { return w; }
+    method int getH() { return h; }
+
+    /** Dibuja la paleta en pantalla. */
+    method void draw() {
+        do paint(true);
+        return;
+    }
+
+    /** Borra la paleta (la pinta de blanco, sin dejar artefactos). */
+    method void erase() {
+        do paint(false);
+        return;
+    }
+
+    /**
+     * Rutina unica de pintado, compartida por draw() y erase().
+     * Asi ambas operaciones cubren exactamente los mismos pixeles.
+     * @param color true = negro (dibujar), false = blanco (borrar)
+     */
+    method void paint(boolean color) {
+        do Screen.setColor(color);
+        do Screen.drawRectangle(x, y, x + w - 1, y + h - 1);    // cuerpo
+
+        if (color) {
+            // Ranura central blanca (solo al dibujar; al borrar ya esta en blanco)
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x + 2, y + 4, x + 3, y + h - 5);
+            do Screen.setColor(true);
+        }
+        return;
+    }
+}

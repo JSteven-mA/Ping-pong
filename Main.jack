@@ -1,0 +1,55 @@
+/**
+ * Main: punto de entrada de la aplicacion (Hito 1).
+ *
+ * En este hito el programa solo construye y dibuja la escena inicial:
+ * tablero, dos paletas, la pelota y el marcador en 0 - 0. No hay
+ * movimiento ni lectura de teclado (eso es parte del Hito 2).
+ */
+class Main {
+
+    /**
+     * Imprime un texto en la cuadricula de texto (23 filas x 64 columnas).
+     * Libera el String despues de imprimirlo: en Jack cada literal de texto
+     * reserva memoria nueva, y sin dispose() quedaria memoria sin reclamar.
+     * @param row fila (0..22)
+     * @param col columna (0..63)
+     * @param s   texto a imprimir (este metodo se encarga de liberarlo)
+     */
+    function void say(int row, int col, String s) {
+        do Output.moveCursor(row, col);
+        do Output.printString(s);
+        do s.dispose();
+        return;
+    }
+
+    /** Construye la escena inicial, la dibuja y libera los objetos. */
+    function void main() {
+        var Board board;
+        var Paddle player, cpu;
+        var Ball ball;
+
+        // --- Creacion de las entidades ---
+        let board = Board.new();
+        let player = Paddle.new(10, 118);   // paleta izquierda, centrada verticalmente
+        let cpu = Paddle.new(496, 118);     // paleta derecha, centrada verticalmente
+        let ball = Ball.new(256, 138);      // centro de la zona de juego
+
+        // --- Renderizado (el tablero va primero para quedar al fondo) ---
+        do board.draw();
+        do player.draw();
+        do cpu.draw();
+        do ball.draw();
+
+        // --- Marcador inicial en la zona del HUD (filas superiores) ---
+        do Main.say(0, 1, "JUGADOR: 0");
+        do Main.say(0, 38, "CPU: 0");
+
+        // --- Liberacion de memoria ---
+        // Los pixeles ya estan en pantalla, asi que los objetos pueden liberarse.
+        do board.dispose();
+        do player.dispose();
+        do cpu.dispose();
+        do ball.dispose();
+        return;
+    }
+}
